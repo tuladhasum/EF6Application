@@ -3,7 +3,7 @@ using SamuraiApp.Domain;
 
 namespace SamuraiApp.Data
 {
-    class SamuraiContext : DbContext
+    public class SamuraiContext : DbContext
     {
         // PM> Get-Help EntityFrameworkCore
         // PM> get-help Add-Migration
