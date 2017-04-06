@@ -10,12 +10,25 @@ namespace SomeUI
 {
     class Program
     {
+        private static SamuraiContext _context = new SamuraiContext();
         static void Main(string[] args)
         {
+
             //InsertSamurai();
             //InsertMultipleSamurais();
-            SimpleSamuraiQuery();
+            //SimpleSamuraiQuery();
+            MoreQueries();
             Console.ReadLine();
+        }
+
+        private static void MoreQueries()
+        {
+            var name = "Sumit";
+            //var samurais = _context.Samurais.Where(s => s.Name == name).ToList();
+            // Will return an instance and not a list
+            //var samurais = _context.Samurais.FirstOrDefault(s => s.Name == name);
+            // Will search by Id or Key
+            var samurais = _context.Samurais.Find(2);
         }
 
         private static void SimpleSamuraiQuery()
