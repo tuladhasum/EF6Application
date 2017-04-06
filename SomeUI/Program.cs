@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SomeUI
 {
@@ -17,8 +18,93 @@ namespace SomeUI
             //InsertSamurai();
             //InsertMultipleSamurais();
             //SimpleSamuraiQuery();
-            MoreQueries();
+            //MoreQueries();
+            //RetrieveAndUpdateSamurai();
+            //RetrieveAndUpdateMultipleSamurais();
+            //MultipleOperations();
+            //QueryAndUpdateSamuraiDisconnected();
+            //AddSomeMoreSamurais();
+            //DeleteWhileTracked();
+            //DeleteMany();
+            //DeleteWhileNotTracked();
             Console.ReadLine();
+        }
+
+        private static void DeleteWhileNotTracked()
+        {
+            var samurai = _context.Samurais.FirstOrDefault(s => s.Name == "Heihachi");
+            using (var contextNewAppInstance = new SamuraiContext())
+            {
+                contextNewAppInstance.Samurais.Remove(samurai);
+                //contextNewAppInstance.Entry(samurai).State = EntityState.Deleted;
+                contextNewAppInstance.SaveChanges();
+            }
+        }
+
+        private static void DeleteMany()
+        {
+            var samurais = _context.Samurais.Where(s => s.Name.Contains("0"));
+            _context.Samurais.RemoveRange(samurais);
+            // alternate: _context.RemoveRange(samurais);
+            _context.SaveChanges();
+        }
+
+        private static void DeleteWhileTracked()
+        {
+            var samurai = _context.Samurais.FirstOrDefault(s => s.Name == "Kambei Shimada");
+            _context.Samurais.Remove(samurai);
+            //alternates:
+            //_context.Remove(samurai);
+            //_context.Entry(samurai).State = EntityState.Deleted;
+            //_context.Samurais.Remove(_context.Samurais.Find(1));
+            _context.SaveChanges();
+        }
+
+        private static void AddSomeMoreSamurais()
+        {
+            _context.AddRange(
+                new Samurai { Name = "Kambei Shimada" },
+                new Samurai { Name = "James Smith" },
+                new Samurai { Name = "Jared Kushner" },
+                new Samurai { Name = "Steph McMan" },
+                new Samurai { Name = "Nathan Nill" },
+                new Samurai { Name = "Randy Orton" },
+                new Samurai { Name = "Kevin O'leary" }
+                );
+            _context.SaveChanges();
+        }
+
+        private static void QueryAndUpdateSamuraiDisconnected()
+        {
+            var samurai = _context.Samurais.FirstOrDefault(s => s.Name == "Jared");
+            samurai.Name += "San";
+            using (var contextNewAppInstance = new SamuraiContext())
+            {
+                contextNewAppInstance.Samurais.Update(samurai);
+                contextNewAppInstance.SaveChanges();
+            }
+        }
+
+        private static void MultipleOperations()
+        {
+            var samurai = _context.Samurais.FirstOrDefault();
+            samurai.Name += "San";
+            _context.Samurais.Add(new Samurai { Name = "Jared" });
+            _context.SaveChanges();
+        }
+
+        private static void RetrieveAndUpdateMultipleSamurais()
+        {
+            var samurais = _context.Samurais.ToList();
+            samurais.ForEach(s => s.Name += "San");
+            _context.SaveChanges();
+        }
+
+        private static void RetrieveAndUpdateSamurai()
+        {
+            var samurai = _context.Samurais.FirstOrDefault();
+            samurai.Name += "San";
+            _context.SaveChanges();
         }
 
         private static void MoreQueries()
